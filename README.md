@@ -25,7 +25,7 @@ For run all the unit test classes.
 
 Postman collecton.
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/6909838-5bf12934-705f-4920-9807-44a5ad382ec9?action=collection%2Ffork&collection-url=entityId%3D6909838-5bf12934-705f-4920-9807-44a5ad382ec9%26entityType%3Dcollection%26workspaceId%3D486b0a71-fcaf-46d6-820e-fecf40af02a7)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/kuromicho/workspace/backend-ms-spring)
 
 ### Launched On: 
 
