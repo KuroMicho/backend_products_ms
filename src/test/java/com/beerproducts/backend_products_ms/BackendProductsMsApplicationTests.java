@@ -60,7 +60,7 @@ class BackendProductsMsApplicationTests {
 	public void whenPostRequestToProductsAndValidProduct_thenCorrectResponse() throws Exception {
 		// MediaType textPlainUtf8 = new MediaType(MediaType.TEXT_PLAIN,
 		// Charset.forName("UTF-8"));
-		String product = "{\"name\": \"test product\", \"description\" : \"test desc\", \"image\" : \"test image\", \"style\" : \"test style\", \"price\" : \"20\", \"category\" : [\"test category\"], \"avg_grade\": \"1.1\", \"ibu_grade\": \"1.2\"}";
+		String product = "{\"name\": \"test product\",\"username\": \"jhon117\", \"description\" : \"test desc\", \"image\" : \"test image\", \"style\" : \"test style\", \"price\" : \"20\", \"category\" : [\"test category\"], \"avg_grade\": \"1.1\", \"ibu_grade\": \"1.2\"}";
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products").content(product)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
@@ -70,18 +70,21 @@ class BackendProductsMsApplicationTests {
 	public void whenPutRequestToProductAndValidProduct_thenCorrectResponse() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 
-		Product product = new Product("Name test", "Description test", List.of("category test"), "Image.png test",
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
 				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
 
 		product.setId(ObjectId.get().toHexString());
 		product.setAt_created(new Date());
 		doReturn(product).when(productService).saveOrUpdateProduct(product);
-		doReturn(Optional.of(product)).when(productService).getProductById(product.getId());
+		doReturn(List.of(product)).when(productService).findProductsByUsername(product.getUsername());
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
 
-		Product productToPut = new Product("Name updated", "Description updated", List.of("category updated"),
+		Product productToPut = new Product("Name updated", "kuro", "Description updated", List.of("category updated"),
 				"Image.png updated", BigDecimal.TEN, "style updated", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", product.getId().toString())
+		mockMvc.perform(MockMvcRequestBuilders
+				.put("/api/v1/products/{username}/update/{id}", product.getUsername(), product.getId())
 				.content(mapper.writeValueAsString(productToPut)).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
@@ -91,19 +94,22 @@ class BackendProductsMsApplicationTests {
 	public void whenPutRequestToProductAndInvalidProductId_thenErrorResponse() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 
-		Product product = new Product("Name test", "Description test", List.of("category test"), "Image.png test",
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
 				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
 
 		product.setId(ObjectId.get().toHexString());
 		product.setAt_created(new Date());
 		doReturn(product).when(productService).saveOrUpdateProduct(product);
-		doReturn(Optional.of(product)).when(productService).getProductById(product.getId());
+		doReturn(List.of(product)).when(productService).findProductsByUsername(product.getUsername());
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
 
-		Product productToPut = new Product("Name updated", "Description updated", List.of("category updated"),
+		Product productToPut = new Product("Name updated", "kuro", "Description updated", List.of("category updated"),
 				"Image.png updated", BigDecimal.TEN, "style updated", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/{id}", "999")
-				.content(mapper.writeValueAsString(productToPut)).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/api/v1/products/{username}/update/{id}", product.getUsername(), "999")
+						.content(mapper.writeValueAsString(productToPut)).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.errors",
 						IsIterableContaining.hasItem("Not found product with the id 999")))
@@ -112,13 +118,14 @@ class BackendProductsMsApplicationTests {
 
 	@Test
 	public void whenDeleteRequestToProductAndValidProduct_thenCorrectResponse() throws Exception {
-		Product product = new Product("Name test", "Description test", List.of("category test"), "Image.png test",
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
 				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
 
 		product.setId(ObjectId.get().toHexString());
 		product.setAt_created(new Date());
 		doReturn(product).when(productService).saveOrUpdateProduct(product);
-		doReturn(Optional.of(product)).when(productService).getProductById(product.getId());
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
 
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/{id}", product.getId().toString()))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
