@@ -1,7 +1,6 @@
 package com.beerproducts.backend_products_ms.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -28,7 +27,6 @@ public class Product {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Description is required")
     private String description;
 
     @NotEmpty(message = "Category is required")
@@ -36,12 +34,11 @@ public class Product {
 
     @NotBlank(message = "Image is required")
     private String image;
-    @PositiveOrZero
 
+    @PositiveOrZero
     @NotNull(message = "Price is required")
     private BigDecimal price;
 
-    @NotBlank(message = "Style is required")
     private String style;
 
     @PositiveOrZero
@@ -53,10 +50,10 @@ public class Product {
     private Float ibu_grade;
 
     @CreatedDate
-    private Date at_created;
+    private String at_created;
 
     @LastModifiedDate
-    private Date at_modified;
+    private String at_modified;
 
     public Product(String name, String username, String description, List<String> category, String image,
             BigDecimal price, String style,

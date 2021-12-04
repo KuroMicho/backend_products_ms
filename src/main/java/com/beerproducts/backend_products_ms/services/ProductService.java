@@ -16,7 +16,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<Product> findProductsByUsername(String username) {
-        return productRepository.findProductsByUsername(username);
+        return productRepository.findByUsername(username);
     }
 
     public Product saveOrUpdateProduct(Product product) {
