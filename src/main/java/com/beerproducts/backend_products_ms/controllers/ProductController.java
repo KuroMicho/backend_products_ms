@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> saveProduct(@Valid @RequestBody Product product) {
         try {
             productService.saveOrUpdateProduct(product);
             return new ResponseEntity<>(product, HttpStatus.CREATED);
@@ -75,53 +75,39 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/products/{username}/update")
-    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product, @PathVariable String username) {
-        List<Product> products = productService.findProductsByUsername(username);
+    @PutMapping("/products/update")
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product) {
 
-        if (products.size() > 0) {
+        Product _product = productService.findProductById(product.getId())
+                .orElse(null);
 
-            Product _product = productService.findProductById(product.getId())
-                    .orElse(null);
-
-            if (_product == null) {
-                throw new ResourceNotFound("Not found product with the id " + product.getId());
-            }
-
-            if (products.contains(_product)) {
-                _product.setName(product.getName());
-                _product.setDescription(product.getDescription());
-                _product.setImage(product.getImage());
-                _product.setPrice(product.getPrice());
-                _product.setStyle(product.getStyle());
-                _product.setCategory(product.getCategory());
-                _product.setAvg_grade(product.getAvg_grade());
-                _product.setIbu_grade(product.getIbu_grade());
-
-                return new ResponseEntity<>(productService.saveOrUpdateProduct(_product), HttpStatus.OK);
-            }
+        if (_product == null) {
+            throw new ResourceNotFound("Not found product with the id " + product.getId());
         }
-        throw new ResourceNotFound("Not found products with the username " + username);
+
+        _product.setName(product.getName());
+        _product.setDescription(product.getDescription());
+        _product.setImage(product.getImage());
+        _product.setPrice(product.getPrice());
+        _product.setStyle(product.getStyle());
+        _product.setCategory(product.getCategory());
+        _product.setAvg_grade(product.getAvg_grade());
+        _product.setIbu_grade(product.getIbu_grade());
+
+        return new ResponseEntity<>(productService.saveOrUpdateProduct(_product), HttpStatus.OK);
 
     }
 
-    @DeleteMapping("/products/{username}/delete/{id}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable String id, @PathVariable String username) {
-        List<Product> products = productService.findProductsByUsername(username);
+    @DeleteMapping("/products/delete/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable String id) {
 
-        if (products.size() > 0) {
+        Product product = productService.findProductById(id)
+                .orElseThrow(() -> new ResourceNotFound("Not found product with the id " + id));
 
-            Product product = productService.findProductById(id)
-                    .orElseThrow(() -> new ResourceNotFound("Not found product with the id " + id));
+        productService.deleteProductById(product.getId());
 
-            if (products.contains(product)) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-                productService.deleteProductById(product.getId());
-
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        }
-        throw new ResourceNotFound("Not found products with the username " + username);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

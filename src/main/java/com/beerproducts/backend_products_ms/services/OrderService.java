@@ -15,9 +15,9 @@ import lombok.AllArgsConstructor;
 public class OrderService {
     private final OrderRepository orderRepository;
 
-    // public List<Order> findOrdersByUsername(String username) {
-    // return orderRepository.findProductsByUsername(username);
-    // }
+    public List<Order> findOrdersByUsername(String username) {
+        return orderRepository.findByUsername(username);
+    }
 
     public Order saveOrUpdateOrder(Order order) {
         return orderRepository.save(order);

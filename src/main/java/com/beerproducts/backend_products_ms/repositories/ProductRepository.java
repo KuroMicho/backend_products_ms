@@ -9,5 +9,5 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
     @Query("{'username': ?0}")
-    List<Product> findProductsByUsername(String username);
+    List<Product> findByUsername(String username);
 }
