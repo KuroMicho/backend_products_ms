@@ -15,15 +15,15 @@ import lombok.AllArgsConstructor;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> findProductsByUsername(String username) {
+        return productRepository.findByUsername(username);
     }
 
     public Product saveOrUpdateProduct(Product product) {
         return productRepository.save(product);
     }
 
-    public Optional<Product> getProductById(String id) {
+    public Optional<Product> findProductById(String id) {
         return productRepository.findById(id);
     }
 
