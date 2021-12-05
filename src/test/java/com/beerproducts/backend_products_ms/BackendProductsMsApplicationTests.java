@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.beerproducts.backend_products_ms.models.Order;
 import com.beerproducts.backend_products_ms.models.Product;
+import com.beerproducts.backend_products_ms.services.OrderService;
 import com.beerproducts.backend_products_ms.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,6 +34,9 @@ class BackendProductsMsApplicationTests {
 
 	@MockBean
 	private ProductService productService;
+
+	@MockBean
+	private OrderService orderService;
 
 	@Test
 	void contextLoads() {
@@ -102,6 +107,7 @@ class BackendProductsMsApplicationTests {
 		product.setAt_created(new Date().toString());
 		product.setAt_modified(new Date().toString());
 		doReturn(product).when(productService).saveOrUpdateProduct(product);
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
 
 		Product productToPut = new Product("Name updated", "kuro", "Description updated", List.of("category updated"),
 				"Image.png updated", BigDecimal.TEN, "style updated", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
@@ -155,6 +161,78 @@ class BackendProductsMsApplicationTests {
 		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
 
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/delete/{id}", product.getId().toString()))
+				.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
+
+	@Test
+	public void whenGetRequestToOrders_thenCorrectResponse() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
+				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
+
+		product.setId(ObjectId.get().toHexString());
+		product.setAt_created(new Date().toString());
+		product.setAt_modified(new Date().toString());
+		doReturn(product).when(productService).saveOrUpdateProduct(product);
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
+
+		Order order = new Order(product.getId(), "name test", "kuro", 10, "completed");
+		order.setId(ObjectId.get().toHexString());
+		order.setAt_created(new Date().toString());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orders/{username}", order.getUsername())
+				.content(mapper.writeValueAsString(order))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+		;
+	}
+
+	@Test
+	public void whenPostRequestToOrdersAndValidOrder_thenCorrectResponse() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
+				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
+
+		product.setId(ObjectId.get().toHexString());
+		product.setAt_created(new Date().toString());
+		product.setAt_modified(new Date().toString());
+		doReturn(product).when(productService).saveOrUpdateProduct(product);
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
+
+		Order order = new Order(product.getId(), "name test", "kuro", 10, "completed");
+		order.setId(ObjectId.get().toHexString());
+		order.setAt_created(new Date().toString());
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orders").content(mapper.writeValueAsString(order))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+		;
+	}
+
+	@Test
+	public void whenDeleteRequestToOrders_thenCorrectResponse() throws Exception {
+		Product product = new Product("Name test", "kuro", "Description test", List.of("category test"),
+				"Image.png test",
+				BigDecimal.TEN, "style test", Float.parseFloat("2.3"), Float.parseFloat("2.1"));
+
+		product.setId(ObjectId.get().toHexString());
+		product.setAt_created(new Date().toString());
+		product.setAt_modified(new Date().toString());
+		doReturn(product).when(productService).saveOrUpdateProduct(product);
+		doReturn(Optional.of(product)).when(productService).findProductById(product.getId());
+
+		Order order = new Order(product.getId(), "name test", "kuro", 10, "completed");
+		order.setId(ObjectId.get().toHexString());
+		order.setAt_created(new Date().toString());
+		doReturn(Optional.of(order)).when(orderService).findOrderById(order.getId());
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/orders/delete/{id}", order.getId()))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
