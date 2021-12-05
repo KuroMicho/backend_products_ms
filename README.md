@@ -36,7 +36,7 @@ Postman collecton.
 
 `API Docs` : <https://products-ms-g6.herokuapp.com/api-beer.html>.
 </br>
-![image](https://drive.google.com/uc?export=view&id=1mkvgBGIkzhDsVsaxCGhODp3hDtf1CYkE)
+![image](https://drive.google.com/uc?export=view&id=1stbCRheMQUBWKnLrd5fgEmkACXxM8mq8)
 </br>
 
 ## Copyright
