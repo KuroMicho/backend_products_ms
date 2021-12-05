@@ -35,23 +35,6 @@ import lombok.AllArgsConstructor;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/products/{username}/product/{id}")
-    public ResponseEntity<Product> getProductsById(@PathVariable String username, @PathVariable String id) {
-        List<Product> products = productService.findProductsByUsername(username);
-
-        if (products.size() > 0) {
-            Product product = productService.findProductById(id)
-                    .orElseThrow(() -> new ResourceNotFound("Not found products with the id " + id));
-
-            if (products.contains(product)) {
-                return new ResponseEntity<>(product, HttpStatus.OK);
-            }
-        }
-
-        throw new ResourceNotFound("Not found products with the username " + username);
-
-    }
-
     @GetMapping("/products/{username}")
     public ResponseEntity<List<Product>> getProductsByUsername(@PathVariable String username) {
         List<Product> products = productService.findProductsByUsername(username);

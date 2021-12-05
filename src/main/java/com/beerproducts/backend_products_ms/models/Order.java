@@ -1,7 +1,5 @@
 package com.beerproducts.backend_products_ms.models;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
