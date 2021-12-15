@@ -29,15 +29,19 @@ Postman collecton.
 
 ### Launched On: 
 
-`Heroku` : <https://products-ms-g6.herokuapp.com>.
-</br>
+`Heroku` : <https://products-ms-g6.herokuapp.com>
+
+Image
+
 ![image](https://drive.google.com/uc?export=view&id=1UmuIELZ7rLJDYvyzIbtniZT_AzSdznmR)
-</br>
+
 
 `API Docs` : <https://products-ms-g6.herokuapp.com/api-beer.html>.
-</br>
+
+Image
+
 ![image](https://drive.google.com/uc?export=view&id=1stbCRheMQUBWKnLrd5fgEmkACXxM8mq8)
-</br>
+
 
 ## Copyright
 
